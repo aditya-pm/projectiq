@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# JetBrains
+.idea/
+
+# VS Code
+.vscode/
+
+# Misc
+coverage/
