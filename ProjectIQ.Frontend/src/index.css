@@ -35,7 +35,8 @@
   --pq-inverse-on-surface: #f2f0f0;
 
   /* Brand */
-  --pq-primary: #ae0011;
+  /* --pq-primary: #ae0011; */
+  --pq-primary: #d71920;
   --pq-on-primary: #ffffff;
 
   --pq-primary-container: #d71920;

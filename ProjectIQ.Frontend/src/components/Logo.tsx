@@ -17,7 +17,7 @@ function Logo({ size = 30 }: LogoProps) {
         strokeLinecap="round"
         fill="none"
       />
-      <rect x="45" y="40" width="10" height="20" rx="2" fill="#d71920" />
+      <rect x="45" y="40" width="10" height="20" rx="2" fill="var(--pq-primary)" />
     </svg>
   )
 }

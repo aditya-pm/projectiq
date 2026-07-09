@@ -20,7 +20,7 @@ type NavigationProps = {
 
 function Navbar() {
   return (
-    <nav className="flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface) px-8">
+    <nav className="fixed top-0 right-0 left-0 z-50 flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface) px-8">
       <div className="flex items-center">
         <Title />
         <Navigation page="Home" />

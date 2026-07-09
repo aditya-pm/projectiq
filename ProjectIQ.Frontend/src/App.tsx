@@ -1,7 +1,7 @@
-import Navbar from "./components/Nabar"
+import WorkspaceLayout from "./layouts/WorkspaceLayout"
 
 export function App() {
-  return <Navbar />
+  return <WorkspaceLayout />
 }
 
 export default App
