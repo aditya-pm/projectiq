@@ -5,22 +5,29 @@ import {
   UserCircleIcon,
   Search02Icon,
 } from "@hugeicons/core-free-icons"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 
 type ActivePage = "Home" | "Projects" | "Team"
+const pages: ActivePage[] = ["Home", "Projects", "Team"]
+
 type NavigationProps = {
   page: ActivePage
 }
 
 function Navbar() {
   return (
-    <div className="flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface) px-8">
+    <nav className="flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface) px-8">
       <div className="flex items-center">
         <Title />
         <Navigation page="Home" />
       </div>
       <SearchInput />
       <Actions />
-    </div>
+    </nav>
   )
 }
 
@@ -36,35 +43,38 @@ function Title() {
 }
 
 function Navigation({ page }: NavigationProps) {
-  const pages: ActivePage[] = ["Home", "Projects", "Team"]
-
   return (
     <div className="flex items-center gap-9 text-base font-medium text-(--pq-inverse-on-surface)">
-      {pages.map((p) =>
-        p == page ? (
-          <span
-            key={p}
-            className="underline decoration-(--pq-primary) decoration-2 underline-offset-9"
-          >
-            {p}
-          </span>
-        ) : (
-          <span key={p} className="text-sm text-(--pq-inverse-on-surface)/70">
-            {p}
-          </span>
-        )
-      )}
+      {pages.map((p) => (
+        <span
+          key={p}
+          className={
+            p === page
+              ? "underline decoration-(--pq-primary) decoration-2 underline-offset-9"
+              : "text-(--pq-inverse-on-surface)/70"
+          }
+        >
+          {p}
+        </span>
+      ))}
     </div>
   )
 }
 
 function SearchInput() {
   return (
-    <input
-      type="text"
-      placeholder="Search resources, files, or commands..."
-      className="w-full bg-white px-4 py-1 text-xs"
-    />
+    <InputGroup className="rounded-none border-none bg-(--pq-inverse-surface-container)">
+      <InputGroupInput
+        placeholder="Search resources, files, or commands..."
+        className="text-sm text-(--pq-inverse-on-surface) placeholder:text-(--pq-inverse-on-surface)/50"
+      />
+      <InputGroupAddon>
+        <HugeiconsIcon
+          icon={Search02Icon}
+          className="text-(--pq-inverse-on-surface)/50"
+        />
+      </InputGroupAddon>
+    </InputGroup>
   )
 }
 
