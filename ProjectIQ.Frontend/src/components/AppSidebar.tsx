@@ -26,10 +26,10 @@ function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-bold">Workspace</SidebarGroupLabel>
 
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="font-medium">
               <SidebarMenuItem>
                 <SidebarMenuButton>Home</SidebarMenuButton>
               </SidebarMenuItem>
@@ -44,10 +44,10 @@ function AppSidebar() {
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel>AI Modules</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-bold">AI MODULES</SidebarGroupLabel>
 
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="font-medium">
               <SidebarMenuItem>
                 <SidebarMenuButton>Executive Summary</SidebarMenuButton>
               </SidebarMenuItem>

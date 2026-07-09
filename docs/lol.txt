@@ -1,0 +1,12 @@
+Viewport
+│
+├── Navbar (fixed)
+│
+└── Workspace (margin-top = navbar height)
+    │
+    ├── SidebarProvider
+    │   │
+    │   ├── Gap (normal document flow)
+    │   └── Fixed Sidebar (top = navbar height, bottom = 0)
+    │
+    └── Main Content
