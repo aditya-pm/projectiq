@@ -11,9 +11,9 @@ function WorkspaceLayout() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <p>
-              AI module details will be displayed here! This text is temporary
-            </p>
+            <div className="p-4">
+              <h2>Executive Summary</h2>
+            </div>
           </SidebarInset>
         </SidebarProvider>
       </div>
