@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   Home03Icon,
@@ -23,15 +24,29 @@ import {
   TextAlignLeft01Icon,
   Target02Icon,
   Settings01Icon,
+  PanelLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { Button } from "./ui/button"
 
 function AppSidebar() {
+  const { toggleSidebar } = useSidebar()
+
   return (
-    <Sidebar variant="inset" className="border-r">
+    <Sidebar variant="inset" className="border-r" collapsible="icon">
       <SidebarHeader className="mb-6 p-2 px-4">
-        <h2 className="headline-md text-(--pq-on-surface)">Project Apollo</h2>
-        <p className="text-xs text-(--pq-on-surface)/60">Active Workspace</p>
+        <div className="flex gap-2 group-data-[collapsible=icon]:justify-center">
+          <h2 className="headline-md text-(--pq-on-surface) group-data-[collapsible=icon]:hidden">
+            Apollo Infrastructure
+          </h2>
+          <Button onClick={toggleSidebar} variant="ghost" size="icon-lg">
+            <HugeiconsIcon icon={PanelLeftIcon} strokeWidth={2.0} />
+          </Button>
+        </div>
+
+        <p className="text-xs text-(--pq-on-surface)/60 group-data-[collapsible=icon]:hidden">
+          Active Workspace
+        </p>
       </SidebarHeader>
 
       <SidebarContent>
@@ -132,13 +147,14 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="flexitems-center border-t border-border p-4 text-sm font-medium text-(--pq-on-surface)/80">
+      <SidebarFooter className="border-t border-border p-4 text-sm font-medium text-(--pq-on-surface)/80">
         <span className="flex items-center gap-2">
           <HugeiconsIcon icon={Settings01Icon} strokeWidth={2.0} size={16} />
-          Settings
+          <span className="group-data-[collapsible=icon]:hidden">Settings</span>
         </span>
-
-        <span className="text-(--pq-on-surface)/50">Version 1.0</span>
+        <span className="text-(--pq-on-surface)/50 group-data-[collapsible=icon]:hidden">
+          Version 1.0
+        </span>
       </SidebarFooter>
     </Sidebar>
   )
