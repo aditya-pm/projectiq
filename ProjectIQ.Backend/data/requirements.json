@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "pqmsVersion": "0.1",
+    "projectName": "RetailPulse Inventory & Order Management",
+    "client": "Meridian Retail Group",
+    "lastUpdated": "2026-07-13",
+    "status": "draft",
+    "language": "en"
+  },
+  "overview": {
+    "coreObjective": "Build a unified inventory and order management platform that lets Meridian Retail Group track stock across multiple warehouses in real time, automate reordering, and give store staff and customers a consistent view of product availability across online and in-store channels.",
+    "expectedDeliverables": [
+      "Staff Web Dashboard",
+      "Customer-Facing Storefront",
+      "Warehouse Mobile Scanner App",
+      "Backend APIs"
+    ],
+    "targetUsers": [
+      "Customer",
+      "Store Staff",
+      "Warehouse Operator",
+      "Inventory Manager",
+      "Administrator"
+    ]
+  },
+  "businessFlow": {
+    "status": "complete",
+    "flows": [
+      {
+        "id": "BF-001",
+        "title": "Stock Reorder Flow",
+        "steps": [
+          "System detects a SKU has fallen below its configured reorder threshold",
+          "System generates a draft purchase order for the supplier linked to that SKU",
+          "Inventory Manager reviews and approves or edits the draft purchase order",
+          "Approved purchase order is sent to the supplier via email",
+          "Warehouse Operator receives incoming stock and scans items against the purchase order",
+          "System updates on-hand inventory counts once receiving is confirmed"
+        ]
+      },
+      {
+        "id": "BF-002",
+        "title": "Online Order Fulfillment Flow",
+        "steps": [
+          "Customer places an order on the storefront",
+          "System checks real-time stock availability across all warehouses",
+          "System allocates the order to the nearest warehouse with sufficient stock",
+          "Warehouse Operator picks and packs the order",
+          "System generates a shipping label and notifies the customer",
+          "Customer tracks shipment status until delivery"
+        ]
+      }
+    ]
+  },
+  "userJourney": {
+    "status": "partial",
+    "journeys": [
+      {
+        "id": "UJ-001",
+        "title": "Customer — Check Product Availability In-Store",
+        "persona": "Customer",
+        "goal": "Find out whether a product is available at a nearby physical store before visiting",
+        "steps": [
+          "Searches for a product on the storefront",
+          "Opens the product detail page",
+          "Selects \"Check In-Store Availability\"",
+          "Enters or selects a nearby store location",
+          "Views real-time stock count for that store"
+        ]
+      }
+    ]
+  },
+  "functionalRequirements": [
+    {
+      "id": "FR-001",
+      "module": "Authentication",
+      "title": "Staff Login",
+      "description": "Store staff, warehouse operators, inventory managers, and administrators can log in with a company email and password.",
+      "actor": "Store Staff",
+      "priority": "High",
+      "acceptanceCriteria": [
+        "Invalid credentials show an inline error without revealing which field was wrong",
+        "Account locks for 15 minutes after 5 failed login attempts",
+        "Session expires after 8 hours of inactivity"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-002",
+      "module": "Authentication",
+      "title": "Role-Based Access Control",
+      "description": "Each staff account is assigned exactly one role (Store Staff, Warehouse Operator, Inventory Manager, Administrator) that determines which screens and actions are available.",
+      "actor": "Administrator",
+      "priority": "High",
+      "acceptanceCriteria": [
+        "Warehouse Operators cannot access purchase order approval screens",
+        "Only Administrators can create or modify staff accounts"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-003",
+      "module": "Inventory",
+      "title": "Real-Time Stock Lookup",
+      "description": "Any authenticated user can view current stock counts for a given SKU, broken down by warehouse and store location.",
+      "actor": "Inventory Manager",
+      "priority": "High",
+      "acceptanceCriteria": [
+        "Stock counts reflect changes within 5 seconds of a scan or sale",
+        "Out-of-stock locations are visually distinguished from low-stock locations"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-004",
+      "module": "Inventory",
+      "title": "Automated Reorder Threshold",
+      "description": "Inventory Managers can configure a minimum stock threshold per SKU per warehouse, below which the system automatically drafts a purchase order.",
+      "actor": "Inventory Manager",
+      "priority": "Medium",
+      "acceptanceCriteria": [
+        "Thresholds can be set individually per warehouse, not just globally per SKU",
+        "Draft purchase orders appear in a pending-approval queue, never sent automatically without review"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-005",
+      "module": "Orders",
+      "title": "Order Placement",
+      "description": "Customers can add products to a cart and place an order, with stock availability validated at checkout.",
+      "actor": "Customer",
+      "priority": "High",
+      "acceptanceCriteria": [
+        "Checkout blocks submission if an item goes out of stock while in the cart",
+        "Customer receives an order confirmation email within 1 minute of purchase"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-006",
+      "module": "Orders",
+      "title": "Warehouse Allocation",
+      "description": "The system automatically allocates each order to the nearest warehouse with sufficient stock to fulfill it.",
+      "actor": "Warehouse Operator",
+      "priority": "Medium",
+      "acceptanceCriteria": [
+        "If no single warehouse can fulfill the full order, the system flags it for manual split-shipment review"
+      ],
+      "source": null
+    },
+    {
+      "id": "FR-007",
+      "module": "Warehouse",
+      "title": "Barcode Scanning for Receiving",
+      "description": "Warehouse Operators can scan incoming shipment barcodes via the mobile app to reconcile received stock against an open purchase order.",
+      "actor": "Warehouse Operator",
+      "priority": "High",
+      "acceptanceCriteria": [
+        "Scanning an item not on the purchase order prompts a discrepancy flag",
+        "Partial receipt of a purchase order is supported and tracked"
+      ],
+      "source": null
+    }
+  ],
+  "nonFunctionalRequirements": [
+    {
+      "id": "NFR-001",
+      "title": "Stock Data Consistency",
+      "description": "Stock counts shown to customers on the storefront must never overstate actual availability by more than a 30-second staleness window, to avoid overselling.",
+      "priority": "High"
+    },
+    {
+      "id": "NFR-002",
+      "title": "Mobile Scanner Offline Tolerance",
+      "description": "The warehouse mobile scanner app must queue scans locally and sync automatically if warehouse WiFi connectivity drops, without losing scan data.",
+      "priority": "Medium"
+    },
+    {
+      "id": "NFR-003",
+      "title": "API Response Time",
+      "description": "95th percentile response time for stock lookup and checkout endpoints must be under 300ms under normal load.",
+      "priority": "Medium"
+    }
+  ],
+  "constraints": [
+    "Must integrate with Meridian's existing SAP-based supplier ordering system",
+    "Warehouse mobile app must run on existing Zebra handheld scanner hardware already deployed in warehouses",
+    "Must support at least 4 physical warehouses and 25 retail store locations at launch"
+  ],
+  "assumptions": [
+    "Meridian will provide SAP API credentials and sandbox access by the start of integration work",
+    "Existing product catalog data (SKUs, descriptions, images) will be provided as a one-time CSV export for initial import",
+    "Store-level point-of-sale systems are out of scope for real-time integration in this phase and will report stock via nightly batch sync"
+  ],
+  "outOfScope": [
+    "In-store point-of-sale (POS) system replacement",
+    "Supplier-facing self-service portal",
+    "Dynamic pricing or discount engine",
+    "Native mobile app for customers (responsive web storefront only for MVP)"
+  ],
+  "glossary": [
+    { "term": "SKU", "definition": "Stock Keeping Unit — a unique identifier for a distinct product/variant" },
+    { "term": "Reorder Threshold", "definition": "The minimum stock level at which a SKU automatically triggers a draft purchase order" },
+    { "term": "Split Shipment", "definition": "An order fulfilled from more than one warehouse because no single warehouse holds full stock" }
+  ]
+}

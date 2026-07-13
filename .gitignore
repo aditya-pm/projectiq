@@ -25,3 +25,6 @@ obj/
 
 # Misc
 coverage/
+
+__pycache__/
+.venv/
