@@ -200,8 +200,17 @@
     "Native mobile app for customers (responsive web storefront only for MVP)"
   ],
   "glossary": [
-    { "term": "SKU", "definition": "Stock Keeping Unit — a unique identifier for a distinct product/variant" },
-    { "term": "Reorder Threshold", "definition": "The minimum stock level at which a SKU automatically triggers a draft purchase order" },
-    { "term": "Split Shipment", "definition": "An order fulfilled from more than one warehouse because no single warehouse holds full stock" }
+    {
+      "term": "SKU",
+      "definition": "Stock Keeping Unit — a unique identifier for a distinct product/variant"
+    },
+    {
+      "term": "Reorder Threshold",
+      "definition": "The minimum stock level at which a SKU automatically triggers a draft purchase order"
+    },
+    {
+      "term": "Split Shipment",
+      "definition": "An order fulfilled from more than one warehouse because no single warehouse holds full stock"
+    }
   ]
 }

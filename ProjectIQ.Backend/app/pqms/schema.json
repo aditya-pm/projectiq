@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pqms.schema.json",
+  "title": "PQMS Requirements Document",
+  "type": "object",
+  "required": [
+    "meta",
+    "overview",
+    "businessFlow",
+    "userJourney",
+    "functionalRequirements"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["pqmsVersion", "projectName", "lastUpdated"],
+      "properties": {
+        "pqmsVersion": { "type": "string" },
+        "projectName": { "type": "string" },
+        "client": { "type": "string" },
+        "lastUpdated": { "type": "string", "format": "date" },
+        "status": { "enum": ["draft", "reviewed", "approved"] },
+        "language": { "type": "string" }
+      }
+    },
+    "overview": {
+      "type": "object",
+      "required": ["coreObjective"],
+      "properties": {
+        "coreObjective": { "type": "string", "minLength": 1 },
+        "expectedDeliverables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "targetUsers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "businessFlow": { "$ref": "#/$defs/flowEnvelope" },
+    "userJourney": { "$ref": "#/$defs/journeyEnvelope" },
+    "functionalRequirements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "nonFunctionalRequirements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "constraints": { "type": "array", "items": { "type": "string" } },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "outOfScope": { "type": "array", "items": { "type": "string" } },
+    "glossary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "definition"],
+        "properties": {
+          "term": { "type": "string" },
+          "definition": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "required": ["id", "title", "description"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^N?FR-\\d{3}$" },
+        "module": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string", "minLength": 1 },
+        "actor": { "type": "string" },
+        "priority": { "enum": ["High", "Medium", "Low"] },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "source": { "type": ["string", "null"] }
+      }
+    },
+    "flowEnvelope": {
+      "type": "object",
+      "required": ["status", "flows"],
+      "properties": {
+        "status": { "enum": ["complete", "partial", "not-provided"] },
+        "flows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "steps"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^BF-\\d{3}$" },
+              "title": { "type": "string" },
+              "steps": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "journeyEnvelope": {
+      "type": "object",
+      "required": ["status", "journeys"],
+      "properties": {
+        "status": { "enum": ["complete", "partial", "not-provided"] },
+        "journeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "persona", "goal", "steps"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^UJ-\\d{3}$" },
+              "title": { "type": "string" },
+              "persona": { "type": "string" },
+              "goal": { "type": "string" },
+              "steps": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}
