@@ -20,7 +20,7 @@ type NavigationProps = {
 
 function Navbar() {
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface) px-8">
+    <nav className="fixed top-0 right-0 left-0 z-50 flex h-(--pq-navbar-height) w-full items-center justify-between gap-36 bg-(--pq-inverse-surface-container) px-8">
       <div className="flex items-center">
         <Title />
         <Navigation page="Home" />
@@ -63,7 +63,7 @@ function Navigation({ page }: NavigationProps) {
 
 function SearchInput() {
   return (
-    <InputGroup className="rounded-none border-none bg-(--pq-inverse-surface-container)">
+    <InputGroup className="rounded-none border-none bg-(--pq-inverse-surface)">
       <InputGroupInput
         placeholder="Search resources, files, or commands..."
         className="text-sm text-(--pq-inverse-on-surface) placeholder:text-(--pq-inverse-on-surface)/50"

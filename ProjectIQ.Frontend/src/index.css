@@ -196,6 +196,13 @@
   --radius: var(--pq-radius-default);
 }
 
+.display-lg {
+  font-size: var(--pq-display-lg-size);
+  font-weight: var(--pq-display-lg-weight);
+  line-height: var(--pq-display-lg-line-height);
+  letter-spacing: var(--pq-display-lg-letter-spacing);
+}
+
 .headline-md {
   font-size: var(--pq-headline-md-size);
   font-weight: var(--pq-headline-md-weight);
