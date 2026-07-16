@@ -9,6 +9,15 @@ import {
   InformationCircleIcon,
   CheckmarkCircle02Icon,
   ArrowRight01Icon,
+  Target01Icon,
+  StationeryIcon,
+  UserGroupIcon,
+  ContainerTruckIcon,
+  Tick01Icon,
+  UserGroup02Icon,
+  UserIcon,
+  BadgeAlertIcon,
+  JusticeScale02Icon,
 } from "@hugeicons/core-free-icons"
 import {
   Card,
@@ -32,6 +41,31 @@ function ExecutiveSummary() {
       <SummaryLayout />
     </div>
   )
+}
+
+type badgeVariant = "low" | "medium" | "high"
+type badgeProp = { variant: badgeVariant | RiskSeverity }
+function Badge({ variant }: badgeProp) {
+  switch (variant) {
+    case "low":
+      return (
+        <span className="rounded-md bg-green-100 p-1 font-semibold text-green-500">
+          Low
+        </span>
+      )
+    case "medium":
+      return (
+        <span className="rounded-md bg-yellow-100 p-1 font-semibold text-yellow-500">
+          Medium
+        </span>
+      )
+    case "high":
+      return (
+        <span className="rounded-md bg-red-100 p-1 font-semibold text-red-500">
+          High
+        </span>
+      )
+  }
 }
 
 function Heading() {
@@ -91,45 +125,56 @@ function ProjectOverview({ overview }: { overview: string }) {
 
 type DocumentStatus = "draft" | "reviewed" | "approved"
 
-type ProjectMeta = {
+interface ProjectMetadataCardProps {
   projectName: string
   client: string
   lastUpdated: string
   status: DocumentStatus
+  className?: string
 }
 
-function ProjectMetadata(props: ProjectMeta) {
+function ProjectMetadataCard({
+  projectName,
+  client,
+  lastUpdated,
+  status,
+  className = "",
+}: ProjectMetadataCardProps) {
   return (
-    <div className="flex flex-1 flex-col gap-2 rounded-md bg-white p-4 shadow-sm inset-shadow-2xs">
-      <div className="flex items-center gap-3">
-        <HugeiconsIcon
-          icon={InformationCircleIcon}
-          className="size-4 text-gray-600"
-          strokeWidth={2}
-        />
-        <h2 className="text-base font-semibold text-gray-900">
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <HugeiconsIcon
+            icon={InformationCircleIcon}
+            className="size-4 text-gray-600"
+            strokeWidth={2}
+          />
           Project Metadata
-        </h2>
-      </div>
-      <div className="flex flex-col gap-2 text-xs font-medium">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Project Name</span>
-          <span>{props.projectName}</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-2 text-xs font-medium">
+          <div className="flex justify-between">
+            <span className="text-gray-600">Project Name</span>
+            <span>{projectName}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Client</span>
+            <span>{client}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Last Updated</span>
+            <span>{lastUpdated}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-gray-600">Document Status</span>
+            <span className="rounded-lg bg-gray-300 px-2 py-1 text-gray-700 capitalize">
+              {status}
+            </span>
+          </div>
         </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Client</span>
-          <span>{props.client}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Last Updated</span>
-          <span>{props.lastUpdated}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Document Stauts</span>
-          <span>{props.status}</span>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -142,7 +187,12 @@ function KeyObjectivesCard({
 }) {
   return (
     <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
-      <CardHeader>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={Target01Icon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
         <CardTitle className="text-lg font-semibold">Key Objectives</CardTitle>
       </CardHeader>
 
@@ -153,11 +203,11 @@ function KeyObjectivesCard({
       <CardContent>
         <ul>
           {objectives.map((o) => (
-            <li key={o} className="flex gap-2">
+            <li key={o} className="flex gap-2 text-sm">
               <HugeiconsIcon
                 icon={CheckmarkCircle02Icon}
                 className="mt-1 size-5 shrink-0 text-(--pq-primary)"
-                strokeWidth={2.0}
+                strokeWidth={1.75}
               />
               {o}
             </li>
@@ -165,7 +215,7 @@ function KeyObjectivesCard({
         </ul>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button
           variant="outline"
           className="flex w-full justify-between rounded-sm border-gray-200 p-5 font-bold"
@@ -180,101 +230,313 @@ function KeyObjectivesCard({
   )
 }
 
-function ProjectStatisticsCard({ className = "" }: CardProps) {
+interface ProjectStatisticsCardProps {
+  functionalRequirements: number
+  nonFunctionalRequirements: number
+  constraints: number
+  assumptions: number
+  outOfScope: number
+  className?: string
+}
+
+function ProjectStatisticsCard({
+  functionalRequirements,
+  nonFunctionalRequirements,
+  constraints,
+  assumptions,
+  outOfScope,
+  className = "",
+}: ProjectStatisticsCardProps) {
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Project Statistics</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={StationeryIcon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
+        <CardTitle className="text-lg font-semibold">
+          Project Statistics
+        </CardTitle>
       </CardHeader>
+
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
       <CardContent>
-        <p>Card Content</p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">
+              Functional Requirements
+            </span>
+            <span className="font-semibold">{functionalRequirements}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">
+              Non-Functional Requirements
+            </span>
+            <span className="font-semibold">{nonFunctionalRequirements}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Constraints</span>
+            <span className="font-semibold">{constraints}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Assumptions</span>
+            <span className="font-semibold">{assumptions}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Out of Scope</span>
+            <span className="font-semibold">{outOfScope}</span>
+          </div>
+        </div>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
+
+      <CardFooter className="mt-auto">
+        <Button
+          variant="outline"
+          className="flex w-full justify-between rounded-sm border-gray-200 p-5 font-bold"
+        >
+          <span>View All Requirements</span>
+          <span>
+            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2.0} />
+          </span>
+        </Button>
       </CardFooter>
     </Card>
   )
 }
 
-function TargetUsersCard({ className = "" }: CardProps) {
+function TargetUsersCard({
+  users,
+  className = "",
+}: {
+  users: string[]
+  className?: string
+}) {
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Target Users</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={UserGroup02Icon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
+        <CardTitle className="text-lg font-semibold">Target Users</CardTitle>
       </CardHeader>
+
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
       <CardContent>
-        <p>Card Content</p>
+        <ul>
+          {users.map((u) => (
+            <li key={u} className="flex items-center gap-2 text-sm">
+              <HugeiconsIcon
+                icon={UserIcon}
+                className="size-4 shrink-0 text-(--pq-primary)"
+                strokeWidth={1.75}
+              />
+              {u}
+            </li>
+          ))}
+        </ul>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
+    </Card>
+  )
+}
+
+type ConstraintsAssumptionsScopeCardProps = {
+  constraints: string[]
+  assumptions: string[]
+  outOfScope: string[]
+  className?: string
+}
+
+function ConstraintsAssumptionsScopeCard({
+  constraints,
+  assumptions,
+  outOfScope,
+  className,
+}: ConstraintsAssumptionsScopeCardProps) {
+  return (
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={JusticeScale02Icon}
+          className="size-5 text-(--pq-primary)"
+        />
+        <CardTitle className="text-lg font-semibold">
+          Constraints, Assumptions & Out of Scope
+        </CardTitle>
+      </CardHeader>
+
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
+      <CardContent className="flex justify-between">
+        <div>
+          <span className="font-semibold">Constraints</span>
+          <ul className="list-disc space-y-1 pl-4">
+            {constraints.map((c) => (
+              <li key={c}>{c}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <span className="font-semibold">Assumptions</span>
+          <ul className="list-disc space-y-1 pl-4">
+            {assumptions.map((a) => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <span className="font-semibold">Out Of Scope</span>
+          <ul className="list-disc space-y-1 pl-4">
+            {outOfScope.map((o) => (
+              <li key={o}>{o}</li>
+            ))}
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+interface Stakeholder {
+  name: string
+  role: string
+  influence: "low" | "medium" | "high"
+  interest: "low" | "medium" | "high"
+}
+
+interface StakeholderSummaryCardProps {
+  stakeholders: Stakeholder[]
+  className?: string
+}
+
+function StakeholderSummaryCard({
+  stakeholders,
+  className = "",
+}: StakeholderSummaryCardProps) {
+  return (
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={UserGroupIcon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
+        <CardTitle className="text-lg font-semibold">
+          Stakeholder Summary
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <table className="w-full border-separate border-spacing-y-2">
+          <thead>
+            <tr>
+              <th className="border-b border-gray-200 pb-2 text-left text-xs font-semibold text-gray-500">
+                Stakeholder
+              </th>
+              <th className="border-b border-gray-200 pb-2 text-left text-xs font-semibold text-gray-500">
+                Role
+              </th>
+              <th className="border-b border-gray-200 pb-2 text-left text-xs font-semibold text-gray-500">
+                Influence
+              </th>
+              <th className="border-b border-gray-200 pb-2 text-left text-xs font-semibold text-gray-500">
+                Interest
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {stakeholders.map((stakeholder) => (
+              <tr key={stakeholder.name} className="py-1">
+                <td className="font-medium">{stakeholder.name}</td>
+                <td className="text-gray-700">{stakeholder.role}</td>
+                <td>
+                  <Badge variant={stakeholder.influence} />
+                </td>
+                <td>
+                  <Badge variant={stakeholder.interest} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </CardContent>
+
+      <CardFooter className="mt-auto">
+        <Button
+          variant="outline"
+          className="flex w-full justify-between rounded-sm border-gray-200 p-5 font-bold"
+        >
+          <span>View Full Stakeholder Matrix</span>
+          <span>
+            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2.0} />
+          </span>
+        </Button>
       </CardFooter>
     </Card>
   )
 }
 
-function ConstraintsAssumptionsScopeCard({ className }: CardProps) {
+function ProjectDeliverablesCard({
+  deliverables,
+  className = "",
+}: {
+  deliverables: string[]
+  className?: string
+}) {
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Constraints, Assumptions & Out of Scope</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={ContainerTruckIcon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
+        <CardTitle className="text-lg font-semibold">
+          Project Deliverables
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
-    </Card>
-  )
-}
 
-function StakeholderSummaryCard({ className }: CardProps) {
-  return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Stakeholder Summary</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
-      </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
-    </Card>
-  )
-}
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
 
-function ProjectDeliverablesCard({ className }: CardProps) {
-  return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Project Deliverables</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
-      </CardHeader>
       <CardContent>
-        <p>Card Content</p>
+        <ul>
+          {deliverables.map((d) => (
+            <li key={d} className="flex items-center gap-2 text-sm font-medium">
+              <HugeiconsIcon
+                icon={Tick01Icon}
+                className="size-4 shrink-0 text-(--pq-primary)"
+                strokeWidth={2}
+              />
+              {d}
+            </li>
+          ))}
+        </ul>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
     </Card>
   )
 }
 
 function MajorFunctionalAreasCard({ className }: CardProps) {
   return (
-    <Card className={className}>
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
       <CardHeader>
-        <CardTitle>Project Deliverables</CardTitle>
+        <CardTitle>Major Functional Areas</CardTitle>
         <CardDescription>Card Description</CardDescription>
         <CardAction>Card Action</CardAction>
       </CardHeader>
@@ -288,19 +550,59 @@ function MajorFunctionalAreasCard({ className }: CardProps) {
   )
 }
 
-function TopRisksCard({ className = "" }: CardProps) {
+type RiskSeverity = "low" | "medium" | "high"
+type Risk = { title: string; description: string; severity: RiskSeverity }
+
+function TopRisksCard({
+  risks,
+  className = "",
+}: {
+  risks: Risk[]
+  className: string
+}) {
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Top Risks</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
+      <CardHeader className="flex items-center gap-2">
+        <HugeiconsIcon
+          icon={BadgeAlertIcon}
+          className="size-5 text-(--pq-primary)"
+          strokeWidth={2.0}
+        />
+        <CardTitle className="text-lg font-semibold">Top Risks</CardTitle>
       </CardHeader>
+
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
       <CardContent>
-        <p>Card Content</p>
+        <ul>
+          {risks.map((risk) => (
+            <li key={risk.title} className="flex gap-1 p-1">
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <span className="font-bold">{risk.title}</span>
+                  <span className="text-gray-500">{risk.description}</span>
+                </div>
+                <span>
+                  <Badge variant={risk.severity} />
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
+
+      <CardFooter className="mt-auto">
+        <Button
+          variant="outline"
+          className="flex w-full justify-between rounded-sm border-gray-200 p-5 font-bold"
+        >
+          <span>View All Risks</span>
+          <span>
+            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2.0} />
+          </span>
+        </Button>
       </CardFooter>
     </Card>
   )
@@ -313,6 +615,87 @@ function SummaryLayout() {
     "Reduce AWS infrastructure spend by 15% through aggressive auto-scaling policies.",
   ]
 
+  const deliverables = [
+    "Staff Web Dashboard",
+    "Customer-Facing Storefront",
+    "Warehouse Mobile Scanner App",
+    "Backend APIs",
+  ]
+
+  const stakeholders: Stakeholder[] = [
+    { name: "John Mitchell", role: "CTO", influence: "high", interest: "high" },
+    {
+      name: "Sarah Chen",
+      role: "Engineering Lead",
+      influence: "high",
+      interest: "high",
+    },
+    {
+      name: "Michael Rodriguez",
+      role: "Data Engineering Manager",
+      influence: "medium",
+      interest: "high",
+    },
+    {
+      name: "Emily Watson",
+      role: "Product Manager",
+      influence: "medium",
+      interest: "low",
+    },
+  ]
+
+  const users = [
+    "Customer",
+    "Store Staff",
+    "Warehouse Operator",
+    "Inventory Manager",
+    "Administrator",
+  ]
+
+  const risks: Risk[] = [
+    {
+      title: "Payment Gateway Downtime",
+      description:
+        "Payment outages could temporarily prevent users from completing transactions.",
+      severity: "high",
+    },
+    {
+      title: "Inventory Synchronization",
+      description: "Concurrent orders may result in inaccurate stock levels.",
+      severity: "medium",
+    },
+    {
+      title: "Vendor Adoption",
+      description:
+        "Vendors may require time to adapt to the new digital workflow.",
+      severity: "medium",
+    },
+    {
+      title: "Scope Expansion",
+      description:
+        "Unplanned feature requests could delay the project timeline.",
+      severity: "low",
+    },
+  ]
+
+  const constraints = [
+    "Must comply with AWS Well-Architected Framework",
+    "Data Residency: US-East-1 region only",
+    "Integratoinw ith existing SAP environment",
+  ]
+
+  const assumptions = [
+    "Legacy data will be accessible during migration",
+    "Team has required AWS and Kubernetes skills",
+    "Third-party APIs will remain stable",
+  ]
+
+  const outOfScope = [
+    "Frontend user inteface development",
+    "On-premise infrastructure migration",
+    "Historical data re-processing",
+  ]
+
   return (
     <div className="flex flex-col gap-4">
       <div className="mt-4 flex gap-6">
@@ -320,26 +703,36 @@ function SummaryLayout() {
           <ProjectOverview overview="The Apollo Infrastructre initiative modernizes the core data processing pipeline by migrating from a monolithic legacy system to a distributed microservices architecture on AWS. The strategic shift aims to reduce latency by 40%, improve horizontal scalability during peak loads, and establish a robust foundation for future machine model integrations." />
           <div className="flex gap-3">
             <KeyObjectivesCard objectives={objectives} className="flex-1" />
-            <ProjectStatisticsCard className="flex-1" />
+            <ProjectStatisticsCard
+              className="flex-1"
+              functionalRequirements={142}
+              nonFunctionalRequirements={28}
+              constraints={12}
+              assumptions={9}
+              outOfScope={14}
+            />
           </div>
-          <StakeholderSummaryCard />
-          <div className="flex gap-3">
-            <TopRisksCard className="flex-1" />
-            <MajorFunctionalAreasCard className="flex-1" />
-          </div>
+          <StakeholderSummaryCard stakeholders={stakeholders} />
+
+          <MajorFunctionalAreasCard className="flex-1" />
         </div>
         <div className="flex flex-1 flex-col justify-between gap-7">
-          <ProjectMetadata
+          <ProjectMetadataCard
             projectName="Apollo Infrastructure"
             client="Apollo Enterprises"
             lastUpdated="Oct 24, 2024"
             status="draft"
           />
-          <ProjectDeliverablesCard className="flex-1" />
-          <TargetUsersCard className="flex-1" />
+          <ProjectDeliverablesCard deliverables={deliverables} />
+          <TargetUsersCard users={users} />
+          <TopRisksCard className="flex-1" risks={risks} />
         </div>
       </div>
-      <ConstraintsAssumptionsScopeCard />
+      <ConstraintsAssumptionsScopeCard
+        constraints={constraints}
+        assumptions={assumptions}
+        outOfScope={outOfScope}
+      />
     </div>
   )
 }
