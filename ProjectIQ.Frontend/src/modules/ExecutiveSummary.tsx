@@ -7,6 +7,8 @@ import {
   Refresh01Icon,
   ContentWritingIcon,
   InformationCircleIcon,
+  CheckmarkCircle02Icon,
+  ArrowRight01Icon,
 } from "@hugeicons/core-free-icons"
 import {
   Card,
@@ -17,6 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+
+interface CardProps {
+  className?: string
+}
 
 function ExecutiveSummary() {
   return (
@@ -29,7 +36,7 @@ function ExecutiveSummary() {
 
 function Heading() {
   return (
-    <div className="flex gap-4 border-b pb-4">
+    <div className="flex justify-between gap-4 border-b pb-4">
       <div>
         <h1 className="display-lg">Executive Summary</h1>
         <span className="font-medium text-gray-500">
@@ -126,11 +133,58 @@ function ProjectMetadata(props: ProjectMeta) {
   )
 }
 
-function KeyObjectivesCard({ objectives }: { objectives: string[] }) {
+function KeyObjectivesCard({
+  objectives,
+  className = "",
+}: {
+  objectives: string[]
+  className?: string
+}) {
   return (
-    <Card className="flex-2">
+    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
       <CardHeader>
-        <CardTitle>Key Objectives</CardTitle>
+        <CardTitle className="text-lg font-semibold">Key Objectives</CardTitle>
+      </CardHeader>
+
+      <div className="px-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
+      <CardContent>
+        <ul>
+          {objectives.map((o) => (
+            <li key={o} className="flex gap-2">
+              <HugeiconsIcon
+                icon={CheckmarkCircle02Icon}
+                className="mt-1 size-5 shrink-0 text-(--pq-primary)"
+                strokeWidth={2.0}
+              />
+              {o}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+
+      <CardFooter>
+        <Button
+          variant="outline"
+          className="flex w-full justify-between rounded-sm border-gray-200 p-5 font-bold"
+        >
+          <span>View All Objectives</span>
+          <span>
+            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2.0} />
+          </span>
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function ProjectStatisticsCard({ className = "" }: CardProps) {
+  return (
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>Project Statistics</CardTitle>
         <CardDescription>Card Description</CardDescription>
         <CardAction>Card Action</CardAction>
       </CardHeader>
@@ -144,29 +198,9 @@ function KeyObjectivesCard({ objectives }: { objectives: string[] }) {
   )
 }
 
-function ProjectStatisticsCard() {
+function TargetUsersCard({ className = "" }: CardProps) {
   return (
-    <div className="flex-1">
-      <Card>
-        <CardHeader>
-          <CardTitle>Project Statistics</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </div>
-  )
-}
-
-function TargetUsersCard() {
-  return (
-    <Card className="flex-1">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Target Users</CardTitle>
         <CardDescription>Card Description</CardDescription>
@@ -182,29 +216,27 @@ function TargetUsersCard() {
   )
 }
 
-function ConstraintsAssumptionsScopeCard() {
+function ConstraintsAssumptionsScopeCard({ className }: CardProps) {
   return (
-    <div className="flex-1">
-      <Card>
-        <CardHeader>
-          <CardTitle>Constraints, Assumptions & Out of Scope</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>Constraints, Assumptions & Out of Scope</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+        <CardAction>Card Action</CardAction>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
   )
 }
 
-function StakeholderSummaryCard() {
+function StakeholderSummaryCard({ className }: CardProps) {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Stakeholder Summary</CardTitle>
         <CardDescription>Card Description</CardDescription>
@@ -220,9 +252,9 @@ function StakeholderSummaryCard() {
   )
 }
 
-function ProjectDeliverablesCard() {
+function ProjectDeliverablesCard({ className }: CardProps) {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Project Deliverables</CardTitle>
         <CardDescription>Card Description</CardDescription>
@@ -238,43 +270,39 @@ function ProjectDeliverablesCard() {
   )
 }
 
-function MajorFunctionalAreasCard() {
+function MajorFunctionalAreasCard({ className }: CardProps) {
   return (
-    <div className="flex-1">
-      <Card>
-        <CardHeader>
-          <CardTitle>Project Deliverables</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>Project Deliverables</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+        <CardAction>Card Action</CardAction>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
   )
 }
 
-function TopRisksCard() {
+function TopRisksCard({ className = "" }: CardProps) {
   return (
-    <div className="flex-1">
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Risks</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>Top Risks</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+        <CardAction>Card Action</CardAction>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -291,24 +319,24 @@ function SummaryLayout() {
         <div className="flex flex-2 flex-col gap-4">
           <ProjectOverview overview="The Apollo Infrastructre initiative modernizes the core data processing pipeline by migrating from a monolithic legacy system to a distributed microservices architecture on AWS. The strategic shift aims to reduce latency by 40%, improve horizontal scalability during peak loads, and establish a robust foundation for future machine model integrations." />
           <div className="flex gap-3">
-            <KeyObjectivesCard objectives={objectives} />
-            <ProjectStatisticsCard />
+            <KeyObjectivesCard objectives={objectives} className="flex-1" />
+            <ProjectStatisticsCard className="flex-1" />
           </div>
           <StakeholderSummaryCard />
           <div className="flex gap-3">
-            <TopRisksCard />
-            <MajorFunctionalAreasCard />
+            <TopRisksCard className="flex-1" />
+            <MajorFunctionalAreasCard className="flex-1" />
           </div>
         </div>
-        <div className="flex flex-1 flex-col justify-between gap-3">
+        <div className="flex flex-1 flex-col justify-between gap-7">
           <ProjectMetadata
             projectName="Apollo Infrastructure"
             client="Apollo Enterprises"
             lastUpdated="Oct 24, 2024"
             status="draft"
           />
-          <ProjectDeliverablesCard />
-          <TargetUsersCard />
+          <ProjectDeliverablesCard className="flex-1" />
+          <TargetUsersCard className="flex-1" />
         </div>
       </div>
       <ConstraintsAssumptionsScopeCard />
