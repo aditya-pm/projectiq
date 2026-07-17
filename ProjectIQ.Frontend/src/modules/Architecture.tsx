@@ -17,7 +17,7 @@ import {
   UserIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useState, useCallback } from "react"
+import { useState, useCallback, cache } from "react"
 import {
   ReactFlow,
   applyNodeChanges,
@@ -110,16 +110,98 @@ const nodeTypes = {
   generic: GenericNode,
 }
 
-const nodeColors = {
-  client: "blue",
-  gateway: "purple",
-  service: "slate",
-  database: "green",
-  cache: "orange",
-  queue: "amber",
-  external: "cyan",
-  infrastructure: "red",
-  generic: "gray",
+const nodeIcons: Record<ArchitectureNodeKind, typeof UserIcon> = {
+  client: UserIcon,
+  gateway: Door01Icon,
+  service: ServiceIcon,
+  database: DatabaseIcon,
+  cache: LayerIcon,
+  queue: Notification01Icon,
+  storage: FolderFileStorageIcon,
+  external: CloudIcon,
+  infrastructure: ServerStack01Icon,
+  generic: MailQuestionMarkIcon,
+}
+
+interface NodeStyle {
+  border: string
+  badge: string
+  selectedShadow: string
+  hoverShadow: string
+  iconClass: string
+}
+
+const nodeStyles: Record<ArchitectureNodeKind, NodeStyle> = {
+  client: {
+    border: "border-blue-600",
+    badge: "border-blue-500 text-blue-700",
+    selectedShadow: "shadow-lg shadow-blue-400",
+    hoverShadow: "shadow-lg hover:shadow-blue-300",
+    iconClass: "size-5 text-blue-600",
+  },
+  gateway: {
+    border: "border-purple-600",
+    badge: "border-purple-500 text-purple-700",
+    selectedShadow: "shadow-lg shadow-purple-400",
+    hoverShadow: "shadow-lg hover:shadow-purple-300",
+    iconClass: "size-5 text-purple-600",
+  },
+  service: {
+    border: "border-slate-600",
+    badge: "border-slate-500 text-slate-700",
+    selectedShadow: "shadow-lg shadow-slate-400",
+    hoverShadow: "shadow-lg hover:shadow-slate-300",
+    iconClass: "size-5 text-slate-600",
+  },
+  database: {
+    border: "border-green-600",
+    badge: "border-green-500 text-green-700",
+    selectedShadow: "shadow-lg shadow-green-400",
+    hoverShadow: "shadow-lg hover:shadow-green-300",
+    iconClass: "size-5 text-green-600",
+  },
+  cache: {
+    border: "border-orange-600",
+    badge: "border-orange-500 text-orange-700",
+    selectedShadow: "shadow-lg shadow-orange-400",
+    hoverShadow: "shadow-lg hover:shadow-orange-300",
+    iconClass: "size-5 text-orange-600",
+  },
+  queue: {
+    border: "border-amber-600",
+    badge: "border-amber-500 text-amber-700",
+    selectedShadow: "shadow-lg shadow-amber-400",
+    hoverShadow: "shadow-lg hover:shadow-amber-300",
+    iconClass: "size-5 text-amber-600",
+  },
+  storage: {
+    border: "border-olive-600",
+    badge: "border-olive-500 text-olive-700",
+    selectedShadow: "shadow-lg shadow-olive-400",
+    hoverShadow: "shadow-lg hover:shadow-olive-300",
+    iconClass: "size-5 text-olive-600",
+  },
+  external: {
+    border: "border-cyan-600",
+    badge: "border-cyan-500 text-cyan-700",
+    selectedShadow: "shadow-lg shadow-cyan-400",
+    hoverShadow: "shadow-lg hover:shadow-cyan-300",
+    iconClass: "size-5 text-cyan-600",
+  },
+  infrastructure: {
+    border: "border-red-600",
+    badge: "border-red-500 text-red-700",
+    selectedShadow: "shadow-lg shadow-red-400",
+    hoverShadow: "shadow-lg hover:shadow-red-300",
+    iconClass: "size-5 text-red-600",
+  },
+  generic: {
+    border: "border-2 border-dashed border-gray-600",
+    badge: "border-gray-500 text-gray-700",
+    selectedShadow: "shadow-lg shadow-gray-400",
+    hoverShadow: "shadow-lg hover:shadow-gray-300",
+    iconClass: "size-5 text-gray-600",
+  },
 }
 
 interface ArchitectureNodeData extends Record<string, unknown> {
@@ -132,22 +214,34 @@ interface ArchitectureNode extends Node<ArchitectureNodeData> {
   type: ArchitectureNodeKind
 }
 
-function ArchitectureNodeComponent() {
-  return <div></div>
+interface ArchitectureNodeComponentProps {
+  nodeType: ArchitectureNodeKind
+  data: ArchitectureNodeData
+  selected: boolean
 }
 
-function ClientNode({ data, selected }: NodeProps<ArchitectureNode>) {
+function ArchitectureNodeComponent({
+  nodeType,
+  data,
+  selected,
+}: ArchitectureNodeComponentProps) {
   return (
     <div
       className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-blue-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-blue-400",
-        !selected && "shadow-lg hover:shadow-blue-300"
+        "min-w-56 rounded-sm border border-l-2 bg-white shadow-sm transition-all",
+        nodeStyles[nodeType].border,
+        selected && nodeStyles[nodeType].selectedShadow,
+        !selected && nodeStyles[nodeType].hoverShadow
       )}
     >
       <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-blue-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-blue-700 uppercase">
-          CLIENT
+        <span
+          className={cn(
+            "rounded-full border bg-white px-2.5 py-0.5 text-xs font-semibold uppercase",
+            nodeStyles[nodeType].badge
+          )}
+        >
+          {nodeType}
         </span>
       </div>
 
@@ -157,8 +251,8 @@ function ClientNode({ data, selected }: NodeProps<ArchitectureNode>) {
       <div className="mt-2 flex items-start gap-3 p-3">
         <div className="rounded-md bg-blue-100 p-2">
           <HugeiconsIcon
-            icon={UserIcon}
-            className="size-5 text-blue-600"
+            icon={nodeIcons[nodeType]}
+            className={nodeStyles[nodeType].iconClass}
             strokeWidth={2}
           />
         </div>
@@ -176,384 +270,106 @@ function ClientNode({ data, selected }: NodeProps<ArchitectureNode>) {
         </div>
       </div>
     </div>
+  )
+}
+
+function ClientNode({ data, selected }: NodeProps<ArchitectureNode>) {
+  return (
+    <ArchitectureNodeComponent
+      nodeType="client"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function GatewayNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-purple-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-purple-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-purple-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-purple-700 uppercase">
-          GATEWAY
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-purple-100 p-2">
-          <HugeiconsIcon
-            icon={Door01Icon}
-            className="size-5 text-purple-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="gateway"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function ServiceNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-slate-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-slate-400"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-slate-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 uppercase">
-          SERVICE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-blue-100 p-2">
-          <HugeiconsIcon
-            icon={ServiceIcon}
-            className="size-5 text-slate-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="service"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function DatabaseNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-green-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-green-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-green-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-green-700 uppercase">
-          DATABASE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-green-100 p-2">
-          <HugeiconsIcon
-            icon={DatabaseIcon}
-            className="size-5 text-green-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="database"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function CacheNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-orange-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-orange-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-orange-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-orange-700 uppercase">
-          CACHE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-orange-100 p-2">
-          <HugeiconsIcon
-            icon={LayerIcon}
-            className="size-5 text-orange-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="cache"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function QueueNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-amber-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-orange-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-amber-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-amber-700 uppercase">
-          QUEUE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-amber-100 p-2">
-          <HugeiconsIcon
-            icon={Notification01Icon}
-            className="size-5 text-amber-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="queue"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function StorageNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-md border border-l-2 border-olive-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-olive-400"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-olive-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-olive-700 uppercase">
-          STORAGE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-olive-100 p-2">
-          <HugeiconsIcon
-            icon={FolderFileStorageIcon}
-            className="size-5 text-olive-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="storage"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function ExternalNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-cyan-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-cyan-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-cyan-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-cyan-700 uppercase">
-          EXTERNAL
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-cyan-100 p-2">
-          <HugeiconsIcon
-            icon={CloudIcon}
-            className="size-5 text-cyan-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="external"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function InfrastructureNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border border-l-2 border-red-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-red-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-red-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-red-700 uppercase">
-          INFRASTRUCTURE
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="mt-2 flex items-start gap-3 p-3">
-        <div className="rounded-md bg-red-100 p-2">
-          <HugeiconsIcon
-            icon={ServerStack01Icon}
-            className="size-5 text-red-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="infrastructure"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
 function GenericNode({ data, selected }: NodeProps<ArchitectureNode>) {
   return (
-    <div
-      className={cn(
-        "min-w-56 rounded-sm border-2 border-dashed border-gray-600 bg-white shadow-sm transition-all",
-        selected && "shadow-lg shadow-gray-200"
-      )}
-    >
-      <div className="absolute -top-3 left-4">
-        <span className="rounded-full border border-gray-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-gray-700 uppercase">
-          GENERAL
-        </span>
-      </div>
-
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
-
-      <div className="flex items-start gap-3 p-3">
-        <div className="rounded-md bg-gray-100 p-2">
-          <HugeiconsIcon
-            icon={MailQuestionMarkIcon}
-            className="size-5 text-gray-600"
-            strokeWidth={2}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{data.label}</p>
-
-          <p className="text-sm text-muted-foreground">{data.technology}</p>
-
-          {data.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {data.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+    <ArchitectureNodeComponent
+      nodeType="generic"
+      data={data}
+      selected={selected}
+    />
   )
 }
 
@@ -622,7 +438,7 @@ const initialNodes: ArchitectureNode[] = [
   {
     id: "notification-service",
     type: "service",
-    position: { x: 760, y: 570 },
+    position: { x: 1500, y: 570 },
     data: {
       label: "Notification Service",
       technology: "Node.js",
