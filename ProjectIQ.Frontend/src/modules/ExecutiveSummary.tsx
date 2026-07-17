@@ -21,18 +21,12 @@ import {
 } from "@hugeicons/core-free-icons"
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-
-interface CardProps {
-  className?: string
-}
 
 function ExecutiveSummary() {
   return (
@@ -381,7 +375,7 @@ function ConstraintsAssumptionsScopeCard({
         <Separator className="bg-gray-200" />
       </div>
 
-      <CardContent className="flex justify-between">
+      <CardContent className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
         <div>
           <span className="font-semibold">Constraints</span>
           <ul className="list-disc space-y-1 pl-4">
@@ -528,24 +522,6 @@ function ProjectDeliverablesCard({
           ))}
         </ul>
       </CardContent>
-    </Card>
-  )
-}
-
-function MajorFunctionalAreasCard({ className }: CardProps) {
-  return (
-    <Card className={`${className} shadow-sm ring-0 inset-shadow-2xs`}>
-      <CardHeader>
-        <CardTitle>Major Functional Areas</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
-      </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
     </Card>
   )
 }
@@ -699,7 +675,7 @@ function SummaryLayout() {
   return (
     <div className="flex flex-col gap-4">
       <div className="mt-4 flex gap-6">
-        <div className="flex flex-2 flex-col gap-4">
+        <div className="flex flex-2 flex-col justify-between gap-4">
           <ProjectOverview overview="The Apollo Infrastructre initiative modernizes the core data processing pipeline by migrating from a monolithic legacy system to a distributed microservices architecture on AWS. The strategic shift aims to reduce latency by 40%, improve horizontal scalability during peak loads, and establish a robust foundation for future machine model integrations." />
           <div className="flex gap-3">
             <KeyObjectivesCard objectives={objectives} className="flex-1" />
@@ -713,8 +689,11 @@ function SummaryLayout() {
             />
           </div>
           <StakeholderSummaryCard stakeholders={stakeholders} />
-
-          <MajorFunctionalAreasCard className="flex-1" />
+          <ConstraintsAssumptionsScopeCard
+            constraints={constraints}
+            assumptions={assumptions}
+            outOfScope={outOfScope}
+          />
         </div>
         <div className="flex flex-1 flex-col justify-between gap-7">
           <ProjectMetadataCard
@@ -728,11 +707,6 @@ function SummaryLayout() {
           <TopRisksCard className="flex-1" risks={risks} />
         </div>
       </div>
-      <ConstraintsAssumptionsScopeCard
-        constraints={constraints}
-        assumptions={assumptions}
-        outOfScope={outOfScope}
-      />
     </div>
   )
 }

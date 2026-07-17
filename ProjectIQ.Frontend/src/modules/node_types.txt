@@ -1,0 +1,189 @@
+Node Types
+==========
+
+1. client
+------------
+Represents any application used by an end user.
+
+Examples:
+- React Web App
+- Angular Dashboard
+- Flutter Mobile App
+- iOS App
+- Android App
+- Desktop Client
+- CLI Tool
+
+
+2. gateway
+------------
+Acts as the entry point into the backend.
+
+Examples:
+- API Gateway
+- NGINX
+- Kong Gateway
+- Envoy Proxy
+- Azure API Management
+- AWS API Gateway
+
+
+3. service
+------------
+Any backend service or microservice.
+
+Examples:
+- Auth Service
+- Order Service
+- Payment Service
+- User Service
+- Inventory Service
+- Notification Service
+- Search Service
+- Catalog Service
+- Recommendation Service
+
+
+4. database
+------------
+Persistent data storage.
+
+Examples:
+- PostgreSQL
+- MySQL
+- SQL Server
+- MongoDB
+- DynamoDB
+- Cassandra
+- Neo4j
+- Elasticsearch (if used as primary datastore)
+
+
+5. cache
+------------
+Temporary high-speed storage.
+
+Examples:
+- Redis
+- Memcached
+- In-Memory Cache
+
+
+6. queue
+------------
+Asynchronous messaging/event systems.
+
+Examples:
+- RabbitMQ
+- Kafka
+- AWS SQS
+- Azure Service Bus
+- Google Pub/Sub
+
+
+7. storage
+------------
+Object or file storage.
+
+Examples:
+- Amazon S3
+- Azure Blob Storage
+- Google Cloud Storage
+- MinIO
+- File Share
+- NAS
+
+
+8. external
+------------
+Any third-party or external dependency.
+
+Examples:
+- Stripe
+- Razorpay
+- Twilio
+- Firebase Auth
+- Google Maps API
+- SendGrid
+- GitHub API
+- OpenAI API
+- SAP
+- Salesforce
+
+
+9. infrastructure
+------------
+Infrastructure or platform components.
+
+Examples:
+- Kubernetes Cluster
+- Docker Host
+- EC2 Instance
+- Azure VM
+- Load Balancer
+- CDN
+- DNS
+- Terraform
+- Prometheus
+- Grafana
+
+
+10. generic
+------------
+Fallback when the AI cannot confidently classify a component.
+
+Examples:
+- Analytics Engine
+- Business Rules Engine
+- Legacy System
+- Internal Module
+- Unknown Component
+
+
+
+Edge Types
+==========
+
+http
+grpc
+tcp
+database
+message
+event
+stream
+file
+dependency
+generic
+
+
+
+ArchitectureNode
+================
+
+id
+label
+type
+technology
+description
+metadata
+
+
+
+EXAMPLE: 
+id: order-service
+
+label: Order Service
+
+type: service
+
+technology: Go + gRPC
+
+description:
+Handles order creation, validation and lifecycle management.
+
+metadata:
+Language: Go
+Framework: Gin
+Port: 50051
+Owner: Backend Team
+Criticality: High

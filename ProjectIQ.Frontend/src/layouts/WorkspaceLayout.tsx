@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import AppSidebar from "@/components/AppSidebar"
 import ExecutiveSummary from "@/modules/ExecutiveSummary"
+import Architecture from "@/modules/Architecture"
 
 function WorkspaceLayout() {
   return (
@@ -13,7 +14,8 @@ function WorkspaceLayout() {
           <AppSidebar />
           <SidebarInset>
             <div className="p-8">
-              <ExecutiveSummary />
+              {/* <ExecutiveSummary /> */}
+              <Architecture />
             </div>
           </SidebarInset>
         </SidebarProvider>
