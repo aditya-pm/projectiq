@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import AppSidebar from "@/components/AppSidebar"
 import ExecutiveSummary from "@/modules/ExecutiveSummary"
-import Architecture from "@/modules/Architecture"
+import Architecture from "@/modules/Architecture/Architecture"
 
 function WorkspaceLayout() {
   return (
