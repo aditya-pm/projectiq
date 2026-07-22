@@ -1,9 +1,9 @@
 import type { Edge } from "@xyflow/react"
-import type { ArchitectureNode } from "./types"
+import type { ArchitectureFlowNode } from "./types"
 
 const DEFAULT_POSITION = { x: 0, y: 0 }
 
-export const initialNodes: ArchitectureNode[] = [
+export const initialNodes: ArchitectureFlowNode[] = [
   // =========================
   // CLIENTS
   // =========================

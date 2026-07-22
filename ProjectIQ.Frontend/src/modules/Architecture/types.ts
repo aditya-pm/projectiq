@@ -18,7 +18,7 @@ export interface ArchitectureNodeData extends Record<string, unknown> {
   description?: string
 }
 
-export interface ArchitectureNode extends Node<ArchitectureNodeData> {
+export interface ArchitectureFlowNode extends Node<ArchitectureNodeData> {
   type: ArchitectureNodeKind
 }
 
